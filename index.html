@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Papelaria Express</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    .produto {
+      background-color: #fff;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      padding: 8px 12px;
+      margin-top: 5px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #219150;
+    }
+    input {
+      padding: 8px;
+      width: 100%;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Papelaria Express</h1>
+
+  <h2>Catálogo</h2>
+  <div class="produto">
+    <h3>Caneta Azul</h3>
+    <p>R$ 2,50</p>
+    <button onclick="adicionarCarrinho('Caneta Azul', 2.5)">Adicionar</button>
+  </div>
+  <div class="produto">
+    <h3>Caderno 10 matérias</h3>
+    <p>R$ 19,90</p>
+    <button onclick="adicionarCarrinho('Caderno 10 matérias', 19.9)">Adicionar</button>
+  </div>
+  <div class="produto">
+    <h3>Lápis Preto</h3>
+    <p>R$ 1,20</p>
+    <button onclick="adicionarCarrinho('Lápis Preto', 1.2)">Adicionar</button>
+  </div>
+
+  <h2>Carrinho</h2>
+  <ul id="lista-carrinho"></ul>
+  <p><strong>Total: R$ <span id="total">0.00</span></strong></p>
+
+  <h3>Seus dados:</h3>
+  <input type="text" id="nome" placeholder="Seu nome">
+  <input type="text" id="endereco" placeholder="Seu endereço">
+  <input type="text" id="pagamento" placeholder="Forma de pagamento (PIX, dinheiro...)">
+
+  <button onclick="enviarWhatsApp()">Finalizar Pedido pelo WhatsApp</button>
+
+  <script>
+    let carrinho = [];
+    let total = 0;
+
+    function adicionarCarrinho(nome, preco) {
+      carrinho.push({ nome, preco });
+      total += preco;
+      atualizarCarrinho();
+    }
+
+    function atualizarCarrinho() {
+      const lista = document.getElementById('lista-carrinho');
+      const totalSpan = document.getElementById('total');
+      lista.innerHTML = '';
+      carrinho.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.nome} - R$ ${item.preco.toFixed(2)}`;
+        lista.appendChild(li);
+      });
+      totalSpan.textContent = total.toFixed(2);
+    }
+
+    function enviarWhatsApp() {
+      const nome = document.getElementById('nome').value.trim();
+      const endereco = document.getElementById('endereco').value.trim();
+      const pagamento = document.getElementById('pagamento').value.trim();
+
+      if (!nome || !endereco || !pagamento) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+      }
+
+      let mensagem = "Olá! Quero fazer um pedido:%0A";
+      carrinho.forEach(item => {
+        mensagem += `- ${item.nome} (R$ ${item.preco.toFixed(2)})%0A`;
+      });
+      mensagem += `%0ATotal: R$ ${total.toFixed(2)}%0A`;
+      mensagem += `%0ANome: ${nome}%0AEndereço: ${endereco}%0AForma de pagamento: ${pagamento}`;
+
+      // Substitua pelo seu número com DDD e sem + ou traços
+      const numeroWhatsApp = "556540424081";
+
+      const url = `https://wa.me/${numeroWhatsApp}?text=${mensagem}`;
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
